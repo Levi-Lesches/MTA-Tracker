@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-import "package:mta/data.dart";
 import "package:mta/services.dart";
 
 void main() async {
@@ -17,7 +16,7 @@ void main() async {
     result.add("------ $stopName -----");
 
     for (final arrival in arrivals) {
-      result.add("${arrival.route.displayName} to ${arrival.direction} arrives at ${arrival.eta.formatAsEta()}");
+      result.add(arrival.toString());
     }
   }
 

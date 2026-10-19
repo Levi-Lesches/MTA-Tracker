@@ -5,25 +5,24 @@ import "view_model.dart";
 
 /// The view model for the home page.
 class HomeModel extends ViewModel {
-  void refresh() async {
-    final result = <String>[];
+  List<List<MtaArrival>> path = [];
+
+  List<String> get stops => [for (final arrivals in path) arrivals.first.stopName];
+
+  Future<void> refresh() async {
     final hour = DateTime.now().hour;
+    final result = <List<MtaArrival>>[];
     final path = services.clock.getPath(hour);
     for (final stop in path) {
       final arrivals = (await services.mta.getArrivals(stop)).toList();
       arrivals.sort();
-      final stopName = arrivals.first.stopName;
-      print("------ $stopName -----");
-      for (final arrival in arrivals) {
-        result.add("${arrival.route.displayName} arrives at ${arrival.eta.formatAsEta()}");
-      }
+      result.add(arrivals);
     }
+    this.path = result;
+    notifyListeners();
   }
 
-  int count = 0;
-
-  void increment() {
-    count++;
-    notifyListeners();
+  HomeModel() {
+    refresh();
   }
 }

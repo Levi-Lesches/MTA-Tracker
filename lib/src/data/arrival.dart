@@ -29,4 +29,7 @@ class MtaArrival implements Comparable<MtaArrival> {
 
   @override
   int compareTo(MtaArrival other) => eta.compareTo(other.eta);
+
+  @override
+  String toString() => "${route.displayName} to $direction arrives at ${eta.formatAsEta()}";
 }

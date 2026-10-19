@@ -1,10 +1,10 @@
 name: mta
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 0.1.0+1
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.13.0
 
 dependencies:
   flutter:

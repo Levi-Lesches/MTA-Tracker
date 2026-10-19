@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:mta/src/widgets/atomic/arrivals.dart";
 
 import "package:mta/view_models.dart";
 import "package:mta/widgets.dart";
@@ -10,18 +11,11 @@ class HomePage extends ReactiveWidget<HomeModel> {
 
   @override
   Widget build(BuildContext context, HomeModel model) => Scaffold(
-    appBar: AppBar(title: const Text("Counter")),
-    body: Center(
-      child: Column(
-        children: [
-          const Text("You have pressed the button this many times"),
-          Text(model.count.toString()),
-        ],
-      ),
-    ),
+    appBar: AppBar(title: const Text("MTA Tracker")),
+    body: Center(child: Column(children: [for (final stop in model.path) ArrivalsCard(stop)])),
     floatingActionButton: FloatingActionButton(
-      onPressed: model.increment,
-      child: const Icon(Icons.add),
+      onPressed: model.refresh,
+      child: const Icon(Icons.refresh),
     ),
   );
 }

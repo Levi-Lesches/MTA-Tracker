@@ -18,9 +18,10 @@ class MtaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
-    title: "Flutter Demo",
+    title: "MTA Tracker",
     theme: ThemeData(
       useMaterial3: true,
+      brightness: .dark,
     ),
     routerConfig: router,
   );
