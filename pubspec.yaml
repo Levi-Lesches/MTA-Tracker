@@ -17,6 +17,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   very_good_analysis: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  image_path: images/ic_launcher.png
+  min_sdk_android: 21
+  android: true
+  adaptive_icon_background: images/ic_launcher_background.png
+  adaptive_icon_foreground: images/ic_launcher_foreground.png
+  adaptive_icon_monochrome: images/ic_launcher_monochrome.png
+  adaptive_icon_foreground_inset: 12
