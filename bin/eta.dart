@@ -13,7 +13,7 @@ void main() async {
   final route = routes.getByName("Q");
   final stops = await api.getStops(route.id);
   final stop = stops.getByName("Atlantic");
-  final query = MtaQuery(routeId: route.id, stopId: stop.id, direction: "Manhattan");
+  final query = MtaQuery(routeIds: {route.id}, stopId: stop.id, direction: "Manhattan");
   final arrivals = await api.getArrivals(query);
 
   for (final arrival in arrivals) {

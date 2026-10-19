@@ -12,10 +12,7 @@ void main() {
     final path = clock.getPath(hour);
     print("At $hour: ");
     for (final stop in path) {
-      for (final query in stop) {
-        print("- $query");
-      }
-      print("----------------------");
+      print("- $stop");
     }
   }
 }

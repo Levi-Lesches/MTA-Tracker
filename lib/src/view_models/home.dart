@@ -10,11 +10,7 @@ class HomeModel extends ViewModel {
     final hour = DateTime.now().hour;
     final path = services.clock.getPath(hour);
     for (final stop in path) {
-      final arrivals = <MtaArrival>[];
-      for (final query in stop) {
-        final arrivalsForRoute = await services.mta.getArrivals(query);
-        arrivals.addAll(arrivalsForRoute);
-      }
+      final arrivals = (await services.mta.getArrivals(stop)).toList();
       arrivals.sort();
       final stopName = arrivals.first.stopName;
       print("------ $stopName -----");

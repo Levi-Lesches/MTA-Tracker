@@ -6,11 +6,10 @@ extension JsonUtils on Json {
   List<Json> innerJsonList(String key) => (this[key] as List).cast<Json>();
 }
 
-
 /// Utils on [Map].
 extension MapUtils<K, V> on Map<K, V> {
   /// Gets all the keys and values as 2-element records.
-	Iterable<(K, V)> get records => entries.map((entry) => (entry.key, entry.value));
+  Iterable<(K, V)> get records => entries.map((entry) => (entry.key, entry.value));
 }
 
 /// Zips two lists, like Python
@@ -43,6 +42,6 @@ extension DateTimeUtils on DateTime {
       sign = "PM";
     }
     final eta = difference(now);
-    return "- $hour:$minute $sign (${eta.inMinutes} min away)";
+    return "$hour:$minute $sign (${eta.inMinutes} min away)";
   }
 }

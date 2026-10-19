@@ -4,17 +4,21 @@ import "package:mta/data.dart";
 import "http.dart";
 
 class MtaQuery {
-  final String routeId;
+  final Set<String> routeIds;
   final String stopId;
   final String direction;
 
-  const MtaQuery({required this.routeId, required this.stopId, required this.direction});
+  const MtaQuery({
+    required this.routeIds,
+    required this.stopId,
+    required this.direction,
+  });
 
-  bool matches(MtaArrival arrival) => arrival.route.id == routeId
+  bool matches(MtaArrival arrival) => routeIds.contains(arrival.route.id)
     && arrival.direction == direction;
 
   @override
-  String toString() => "$routeId at $stopId going to $direction";
+  String toString() => "$stopId, $routeIds going to $direction";
 }
 
 class MtaApi {
