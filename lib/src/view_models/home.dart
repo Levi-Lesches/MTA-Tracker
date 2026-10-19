@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:mta/data.dart";
 import "package:mta/services.dart";
 
@@ -22,7 +24,16 @@ class HomeModel extends ViewModel {
     notifyListeners();
   }
 
+  Timer? _refreshTimer;
+
   HomeModel() {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) => refresh());
     refresh();
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
   }
 }
