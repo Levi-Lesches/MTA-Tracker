@@ -20,3 +20,10 @@ class MtaStop {
 extension IterMtaStopUtils on Iterable<MtaStop> {
   MtaStop getByName(String name) => firstWhere((stop) => stop.name.contains(name));
 }
+
+extension IterIterMtaStopUtils on Iterable<Iterable<MtaStop>> {
+  List<MtaStop> getByName(String name) => [
+    for (final stopsList in this)
+      stopsList.getByName(name),
+  ];
+}

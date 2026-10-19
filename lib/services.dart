@@ -3,6 +3,7 @@ library;
 
 import "src/services/service.dart";
 export "src/services/mta.dart";
+export "src/services/clock.dart";
 
 /// A [Service] that manages all other services used by the app.
 class Services extends Service {

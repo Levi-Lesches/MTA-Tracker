@@ -1,10 +1,12 @@
 import "utils.dart";
 import "route.dart";
 
+
+
 class MtaArrival {
   final MtaRoute route;
-  final DateTime eta;
   final String direction;
+  final DateTime eta;
 
   MtaArrival(this.route, this.direction, this.eta);
 
@@ -27,7 +29,7 @@ class MtaArrival {
 }
 
 extension IterMtaArrivalsUtils on Iterable<MtaArrival> {
-  Iterable<DateTime> getByRoute(MtaRoute route, String direction) => [
+  Iterable<DateTime> filter(MtaRoute route, String direction) => [
     for (final other in this)
       if (other.route == route && other.direction == direction)
         other.eta,

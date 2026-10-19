@@ -3,6 +3,20 @@ import "package:mta/data.dart";
 
 import "http.dart";
 
+class MtaQuery {
+  final String routeId;
+  final String stopId;
+  final String direction;
+
+  const MtaQuery({required this.routeId, required this.stopId, required this.direction});
+
+  bool matches(MtaArrival arrival) => arrival.route.id == routeId
+    && arrival.direction == direction;
+
+  @override
+  String toString() => "$routeId at $stopId going to $direction";
+}
+
 class MtaApi {
   static const routesUrl = "https://otp-mta-prod.camsys-apps.com/otp/routers/default/index/routes";
   static final routesUri = Uri.parse(routesUrl);
@@ -23,15 +37,15 @@ class MtaApi {
     return response.toJsonList().map(MtaRoute.fromJson);
   }
 
-  Future<Iterable<MtaStop>> getStops(MtaRoute route) async {
-    final url = stopsUri.replace(queryParameters: {"routeId": route.id});
+  Future<Iterable<MtaStop>> getStops(String routeId) async {
+    final url = stopsUri.replace(queryParameters: {"routeId": routeId});
     final response = await http.get(url);
     response.throwHttpError("Could not GET stops");
     return response.toJsonList().map(MtaStop.fromJson);
   }
 
-  Future<Iterable<MtaArrival>> getArrivals(MtaStop stop) async {
-    final url = arrivalsUri.replace(queryParameters: {"stops": stop.id});
+  Future<Iterable<MtaArrival>> getArrivalsForStop(String stopId) async {
+    final url = arrivalsUri.replace(queryParameters: {"stops": stopId});
     final response = await http.get(url);
     response.throwHttpError("Could not GET arrivals");
     final stopJson = response.toJsonList()[0];
@@ -40,4 +54,15 @@ class MtaApi {
       for (final group in groups) ...MtaArrival.fromJson(group),
     ];
   }
+
+  Future<Set<String>> getDirectionNames(String stopId) async {
+    final arrivals = await getArrivalsForStop(stopId);
+    return {for (final arrival in arrivals) arrival.direction};
+  }
+
+  Future<Iterable<DateTime>> getArrivals(MtaQuery query) async => [
+      for (final arrival in await getArrivalsForStop(query.stopId))
+        if (query.matches(arrival))
+          arrival.eta,
+  ];
 }
