@@ -15,16 +15,8 @@ void main() async {
   final stop = stops.getByName("Atlantic");
   final query = MtaQuery(routeId: route.id, stopId: stop.id, direction: "Manhattan");
   final arrivals = await api.getArrivals(query);
-  final now = DateTime.now();
 
   for (final arrival in arrivals) {
-    var sign = "AM";
-    var hour = arrival.hour;
-    if (hour > 12) {
-      hour -= 12;
-      sign = "PM";
-    }
-    final eta = arrival.difference(now);
-    print("- $hour:${arrival.minute} $sign (${eta.inMinutes} min away)");
+    print(arrival.eta.formatAsEta());
   }
 }

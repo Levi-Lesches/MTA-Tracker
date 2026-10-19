@@ -31,8 +31,11 @@ final schedule = [
 ]
 */
 
+// List of stops, each stop is a list of trains that stop there
+typedef TransitPath = List<List<MtaQuery>>;
+
 class ClockService {
-  List<List<MtaQuery>> getQueries(int hour) {  // [etasToTransfers, ..., etasToWork]
+  TransitPath getPath(int hour) {
     for (final interval in schedule) {
       if (hour < interval.hour) {
         return interval.queries;

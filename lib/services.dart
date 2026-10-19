@@ -1,9 +1,11 @@
 /// Defines and manages the different services used by the app.
 library;
 
-import "src/services/service.dart";
+export "src/services/service.dart";
 export "src/services/mta.dart";
 export "src/services/clock.dart";
+
+import "";
 
 /// A [Service] that manages all other services used by the app.
 class Services extends Service {
@@ -11,6 +13,8 @@ class Services extends Service {
 	Services._();
 
   // Define your services here
+  final mta = MtaApi();
+  final clock = ClockService();
 
 	/// The different services to initialize, in this order.
 	List<Service> get services => [];

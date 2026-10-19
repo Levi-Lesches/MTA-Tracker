@@ -44,25 +44,23 @@ class MtaApi {
     return response.toJsonList().map(MtaStop.fromJson);
   }
 
-  Future<Iterable<MtaArrival>> getArrivalsForStop(String stopId) async {
+  Future<Iterable<MtaArrival>> _getArrivalsForStop(String stopId) async {
     final url = arrivalsUri.replace(queryParameters: {"stops": stopId});
     final response = await http.get(url);
     response.throwHttpError("Could not GET arrivals");
     final stopJson = response.toJsonList()[0];
     final groups = stopJson.innerJsonList("groups");
+
     return [
       for (final group in groups) ...MtaArrival.fromJson(group),
     ];
   }
 
   Future<Set<String>> getDirectionNames(String stopId) async {
-    final arrivals = await getArrivalsForStop(stopId);
+    final arrivals = await _getArrivalsForStop(stopId);
     return {for (final arrival in arrivals) arrival.direction};
   }
 
-  Future<Iterable<DateTime>> getArrivals(MtaQuery query) async => [
-      for (final arrival in await getArrivalsForStop(query.stopId))
-        if (query.matches(arrival))
-          arrival.eta,
-  ];
+  Future<Iterable<MtaArrival>> getArrivals(MtaQuery query) async =>
+    (await _getArrivalsForStop(query.stopId)).where(query.matches);
 }

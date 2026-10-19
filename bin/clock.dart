@@ -9,9 +9,9 @@ const hours = [6, 7, 8, 15, 17, 18, 20];
 void main() {
   final clock = ClockService();
   for (final hour in hours) {
-    final queries = clock.getQueries(hour);
+    final path = clock.getPath(hour);
     print("At $hour: ");
-    for (final stop in queries) {
+    for (final stop in path) {
       for (final query in stop) {
         print("- $query");
       }

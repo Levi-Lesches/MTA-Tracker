@@ -33,4 +33,16 @@ extension ListUtils<E> on List<E> {
 
 extension DateTimeUtils on DateTime {
   DateTime operator +(Duration dur) => add(dur);
+
+  String formatAsEta() {
+    final now = DateTime.now();
+    var sign = "AM";
+    var hour = this.hour;
+    if (hour > 12) {
+      hour -= 12;
+      sign = "PM";
+    }
+    final eta = difference(now);
+    return "- $hour:$minute $sign (${eta.inMinutes} min away)";
+  }
 }
