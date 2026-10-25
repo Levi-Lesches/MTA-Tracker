@@ -1,5 +1,7 @@
 import "dart:async";
 
+import "package:collection/collection.dart";
+
 import "package:mta/data.dart";
 import "package:mta/services.dart";
 
@@ -14,13 +16,25 @@ class HomeModel extends ViewModel {
   Future<void> refresh() async {
     final hour = DateTime.now().hour;
     final result = <List<MtaArrival>>[];
-    final path = services.clock.getPath(hour);
-    for (final stop in path) {
+    final schedule = services.clock.getPath(hour);
+    for (final stop in schedule) {
       final arrivals = (await services.mta.getArrivals(stop)).toList();
       arrivals.sort();
       result.add(arrivals);
     }
-    this.path = result;
+    path = result;
+    notifyListeners();
+
+    for (final (index, stop) in path.indexed) {
+      final nextIndex = index + 1;
+      if (nextIndex == stops.length) continue;
+      final nextStopName = stops[nextIndex];
+      for (final trip in stop) {
+        final tripEtas = await services.mta.getArrivalsForTrip(trip.tripId);
+        final eta = tripEtas.firstWhereOrNull((other) => other.stopName == nextStopName);
+        trip.toTransfer = eta;
+      }
+    }
     notifyListeners();
   }
 

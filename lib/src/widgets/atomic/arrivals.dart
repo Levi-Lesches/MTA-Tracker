@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:mta/data.dart";
-
-import "route.dart";
+import "package:mta/widgets.dart";
 
 class ArrivalTile extends StatelessWidget {
   final MtaArrival arrival;
@@ -12,6 +11,12 @@ class ArrivalTile extends StatelessWidget {
     leading: RouteIcon(arrival.route),
     title: Text(arrival.eta.formatAsEta()),
     subtitle: Text(arrival.direction),
+    leadingAndTrailingTextStyle: context.textTheme.bodyLarge,
+    trailing: arrival.toTransfer == null
+        ? Text(context.formatTime(arrival.eta))
+        : Text(
+            "${context.formatTime(arrival.eta)} - ${context.formatTime(arrival.toTransfer!.eta)}",
+          ),
   );
 }
 

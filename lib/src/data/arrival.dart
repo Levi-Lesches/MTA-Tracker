@@ -7,13 +7,14 @@ class MtaArrival implements Comparable<MtaArrival> {
   final DateTime eta;
   final String stopName;
   final String tripId;
+  MtaArrival? toTransfer;
 
   MtaArrival({
     required this.route,
     required this.direction,
     required this.eta,
-    required this.stopName,
     required this.tripId,
+    required this.stopName,
   });
 
   factory MtaArrival.fromJson({
@@ -61,5 +62,6 @@ class MtaArrival implements Comparable<MtaArrival> {
   int compareTo(MtaArrival other) => eta.compareTo(other.eta);
 
   @override
-  String toString() => "${route.displayName} to $direction arrives at ${eta.formatAsEta()}";
+  String toString() =>
+      "${route.displayName} to $direction arrives at $stopName at ${eta.formatAsEta()}";
 }

@@ -23,4 +23,9 @@ extension HttpResponseUtils on http.Response {
     final data = jsonDecode(body) as List;
     return data.cast<Json>();
   }
+
+  Json toJson() {
+    final data = jsonDecode(body) as Map;
+    return data.cast<String, dynamic>();
+  }
 }
