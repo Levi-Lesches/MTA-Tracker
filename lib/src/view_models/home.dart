@@ -17,7 +17,7 @@ class HomeModel extends ViewModel {
     final hour = DateTime.now().hour;
     final result = <List<MtaArrival>>[];
     final schedule = services.clock.getPath(hour);
-    for (final stop in schedule) {
+    for (final stop in schedule.queries) {
       final arrivals = (await services.mta.getArrivals(stop)).toList();
       arrivals.sort();
       result.add(arrivals);
@@ -27,8 +27,7 @@ class HomeModel extends ViewModel {
 
     for (final (index, stop) in path.indexed) {
       final nextIndex = index + 1;
-      if (nextIndex == stops.length) continue;
-      final nextStopName = stops[nextIndex];
+      final nextStopName = nextIndex == stops.length ? schedule.dest : stops[nextIndex];
       for (final trip in stop) {
         final tripEtas = await services.mta.getArrivalsForTrip(trip.tripId);
         final eta = tripEtas.firstWhereOrNull((other) => other.stopName == nextStopName);

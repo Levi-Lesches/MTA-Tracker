@@ -1,7 +1,7 @@
 import "mta.dart";
 import "schedule.dart" show schedule;
 
-typedef ClockInterval = ({int hour, List<MtaQuery> queries});
+typedef ClockInterval = ({int hour, List<MtaQuery> queries, String dest});
 typedef Query = ({String stopId, String direction, List<String> routeIds});
 
 /* in schedule.dart:
@@ -12,8 +12,8 @@ const Query firstRideToHome = (...)
 const Query transferToHome = (...)
 
 final schedule = <ClockInterval>[
-  (hour: lastTimeToGoToWork, queries: [expand(firstRideToWork), transferToWork]),
-  (hour: lastTimeToGoToHome, queries: [expand(firstRideToHome), transferToHome]),
+  (hour: lastTimeToGoToWork, queries: [expand(firstRideToWork), transferToWork], dest: "stop name"),
+  (hour: lastTimeToGoToHome, queries: [expand(firstRideToHome), transferToHome], dest: "stop name"),
 ]
 
 // eg,
@@ -26,16 +26,13 @@ final schedule = [
 ]
 */
 
-// List of stops, each stop is a list of trains that stop there
-typedef TransitPath = List<MtaQuery>;
-
 class ClockService {
-  TransitPath getPath(int hour) {
+  ClockInterval getPath(int hour) {
     for (final interval in schedule) {
       if (hour < interval.hour) {
-        return interval.queries;
+        return interval;
       }
     }
-    return schedule.last.queries;
+    return schedule.last;
   }
 }
