@@ -6,25 +6,55 @@ class MtaArrival implements Comparable<MtaArrival> {
   final String direction;
   final DateTime eta;
   final String stopName;
+  final String tripId;
 
-  MtaArrival(this.route, this.direction, this.eta, this.stopName);
+  MtaArrival({
+    required this.route,
+    required this.direction,
+    required this.eta,
+    required this.stopName,
+    required this.tripId,
+  });
 
-  static List<MtaArrival> fromJson(Json json) {
+  factory MtaArrival.fromJson({
+    required MtaRoute route,
+    required String direction,
+    required Json json,
+  }) {
+    final stopName = json["stopName"] as String;
+    final isRealtime = json["realtime"] as bool;
+    final departureDaySeconds = json["serviceDay"] as int;
+    final departureDay = DateTime.fromMillisecondsSinceEpoch(departureDaySeconds * 1000);
+    final departureOffsetKey = isRealtime ? "realtimeDeparture" : "scheduledDeparture";
+    final departureOffset = Duration(seconds: json[departureOffsetKey]);
+    final tripId = json["tripId"];
+    final eta = departureDay + departureOffset;
+    return MtaArrival(
+      route: route,
+      direction: direction,
+      eta: eta,
+      stopName: stopName,
+      tripId: tripId,
+    );
+  }
+
+  static List<MtaArrival> forStop(Json json) {
     final route = MtaRoute.fromJson(json.innerJson("route"));
     final direction = json["headsign"];
-    final results = <MtaArrival>[];
-    for (final timeJson in json.innerJsonList("times")) {
-      final stopName = timeJson["stopName"] as String;
-      final isRealtime = timeJson["realtime"] as bool;
-      final departureDaySeconds = timeJson["serviceDay"] as int;
-      final departureDay = DateTime.fromMillisecondsSinceEpoch(departureDaySeconds * 1000);
-      final departureOffsetKey = isRealtime ? "realtimeDeparture" : "scheduledDeparture";
-      final departureOffset = Duration(seconds: timeJson[departureOffsetKey]);
-      final eta = departureDay + departureOffset;
-      final arrival = MtaArrival(route, direction, eta, stopName);
-      results.add(arrival);
-    }
-    return results;
+    return [
+      for (final timeJson in json.innerJsonList("times"))
+        MtaArrival.fromJson(route: route, direction: direction, json: timeJson),
+    ];
+  }
+
+  static List<MtaArrival> forTrip(Json json) {
+    final tripJson = json.innerJson("trip");
+    final route = MtaRoute.fromJson(tripJson.innerJson("route"));
+    final direction = tripJson["tripHeadsign"];
+    return [
+      for (final stopJson in json.innerJsonList("stopTimes"))
+        MtaArrival.fromJson(route: route, direction: direction, json: stopJson),
+    ];
   }
 
   @override

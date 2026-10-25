@@ -56,7 +56,7 @@ class MtaApi {
     final groups = stopJson.innerJsonList("groups");
 
     return [
-      for (final group in groups) ...MtaArrival.fromJson(group),
+      for (final group in groups) ...MtaArrival.forStop(group),
     ];
   }
 
